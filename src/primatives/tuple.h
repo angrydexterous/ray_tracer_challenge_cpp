@@ -2,43 +2,94 @@
 #define TUPLES_H
 
 #include <array>
-#include <algorithm> 
-#include <functional>
-#include <numeric>
+#include <concepts>
 #include <cmath>
+#include "math.h"
 
+template <typename T>
+concept Number = (std::integral<T> || std::floating_point<T>) 
+                 && !std::same_as<T, bool>
+                 && !std::same_as<T, char>
+                 && !std::same_as<T, unsigned char>                 
+                 && !std::same_as<T, char8_t>
+                 && !std::same_as<T, char16_t>
+                 && !std::same_as<T, char32_t>
+                 && !std::same_as<T, wchar_t>;
+
+template <typename T>
+requires Number<T>                 
 class Tuple {
+  T x_, y_, z_, w_;
   public:
+    Tuple(T x, T y, T z, T w){
+        x_ = x;
+        y_ = y;
+        z_ = z;
+        w_ = w;
+    }
     Tuple();
-    Tuple(std::array<double, 4> tuple);
-    Tuple(double x, double y, double z, double w);
 
-    double x() const { return tuple_[0]; }
-    double y() const { return tuple_[1]; }
-    double z() const { return tuple_[2]; }
-    double w() const { return tuple_[3]; }
-    bool IsPoint() const;
-    bool IsVector() const;
-    Tuple add(const Tuple rhs) const;
-    Tuple subtract(const Tuple rhs) const;
-    Tuple negate() const;
-    Tuple multiply(double x) const;
-    Tuple divide(double x) const;
-    double magnitude() const;
-
-  protected: 
-    std::array<double, 4> tuple_;
+    T x() const { return x_; }
+    T y() const { return y_; }
+    T z() const { return z_; }
+    T w() const { return w_; }
+    bool IsPoint() const{
+      return epsilon_eq(w_, 1.0);
+    }
+    bool IsVector() const{
+      return epsilon_eq(w_, 0.0);
+    }
+    T magnitude() const{
+      return std::sqrt(this->x() * this->x() + this->y() * this->y() + this->z() * this->z() + this->w() + this->w());
+    }
 };
 
-bool operator==(const Tuple lhs, const Tuple rhs);
-Tuple operator+(const Tuple lhs, const Tuple rhs);
-Tuple operator-(const Tuple lhs, const Tuple rhs);
-Tuple operator-(const Tuple x);
-Tuple operator*(double x, const Tuple t);
-Tuple operator*(const Tuple t, double x);
-Tuple operator/(const Tuple t, double x);
+template <typename T>
+bool operator==(const Tuple<T> lhs, const Tuple<T> rhs){
+  return epsilon_eq(lhs.x(), rhs.x()) &&
+    epsilon_eq(lhs.y(), rhs.y()) &&
+    epsilon_eq(lhs.z(), rhs.z()) &&
+    epsilon_eq(lhs.w(), rhs.w());
+}
 
+template <typename T>
+auto operator+(const Tuple<T> lhs, const Tuple<T> rhs){
+  return Tuple(lhs.x() + rhs.x(), lhs.y() + rhs.y(), lhs.z() + rhs.z(), lhs.w() + rhs.w());
+}
 
-Tuple Point(double x, double y, double z);
-Tuple Vector(double x, double y, double z);
+template <typename T>
+auto operator-(const Tuple<T> lhs, const Tuple<T> rhs){
+  return Tuple(lhs.x() - rhs.x(), lhs.y() - rhs.y(), lhs.z() - rhs.z(), lhs.w() - rhs.w());
+}
+
+template <typename T>
+auto operator-(const Tuple<T> x){
+  return Tuple(-x.x(), -x.y(), -x.z(), -x.w());
+}
+
+template <typename T>
+auto operator*(T scalar, const Tuple<T> t){
+  return Tuple(t.x() * scalar, t.y() * scalar, t.z() * scalar, t.w() * scalar);
+}
+
+template <typename T>
+auto operator*(const Tuple<T> t, T scalar){
+  return Tuple(t.x() * scalar, t.y() * scalar, t.z() * scalar, t.w() * scalar);
+}
+
+template <typename T>
+auto operator/(const Tuple<T> t, T div){
+  return Tuple(t.x() / div, t.y() / div, t.z() / div, t.w() / div);
+}
+
+template <typename T>
+auto Point(T x, T y, T z){
+  return Tuple(x, y, z, static_cast<T>(1.0));
+}
+
+template <typename T>
+auto Vector(T x, T y, T z){
+  return Tuple(x, y, z, static_cast<T>(0.0));
+}
+
 #endif //TUPLES_H
