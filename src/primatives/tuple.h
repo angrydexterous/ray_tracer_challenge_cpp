@@ -33,14 +33,22 @@ class Tuple {
     T y() const { return y_; }
     T z() const { return z_; }
     T w() const { return w_; }
+
     bool IsPoint() const{
       return epsilon_eq(w_, 1.0);
     }
+
     bool IsVector() const{
       return epsilon_eq(w_, 0.0);
     }
+
     T magnitude() const{
       return std::sqrt(this->x() * this->x() + this->y() * this->y() + this->z() * this->z() + this->w() + this->w());
+    }
+
+    Tuple<T> normalize() const{
+      auto mag = this->magnitude();
+      return Tuple(x_ / mag, y_ / mag, z_ / mag, w_ / mag);
     }
 };
 
@@ -82,14 +90,12 @@ auto operator/(const Tuple<T> t, T div){
   return Tuple(t.x() / div, t.y() / div, t.z() / div, t.w() / div);
 }
 
-template <typename T>
-auto Point(T x, T y, T z){
-  return Tuple(x, y, z, static_cast<T>(1.0));
+auto Point(auto x, auto y, auto z){
+  return Tuple(x, y, z, static_cast<decltype(x)>(1.0));
 }
 
-template <typename T>
-auto Vector(T x, T y, T z){
-  return Tuple(x, y, z, static_cast<T>(0.0));
+auto Vector(auto x, auto y, auto z){
+  return Tuple(x, y, z, static_cast<decltype(x)>(0.0));
 }
 
 #endif //TUPLES_H

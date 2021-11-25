@@ -1,3 +1,5 @@
+#include <vector>
+#include <ranges>
 #include <tuple.h>
 #include "gtest/gtest.h"
 
@@ -12,14 +14,6 @@ protected:
 
   virtual void TearDown() {
   };
-
-  // virtual void verify(int index) {
-  //   Fraction       f        = Fraction{numerators.at(index), denominators.at(index)};
-  //   DivisionResult expected = DivisionResult{divisions.at(index), remainders.at(index)};
-  //   DivisionResult result   = Division(f).divide();
-  //   EXPECT_EQ(result.division, expected.division);
-  //   EXPECT_EQ(result.remainder, expected.remainder);
-  // }
 };
 
 TEST_F(TupleTest, tuple_is_point) {
@@ -52,28 +46,28 @@ TEST_F(TupleTest, create_point_and_vector) {
 }
 
 TEST_F(TupleTest, add_tuple){
-  Tuple a1 = Tuple(3, -2, 5, 1);
-  Tuple a2 = Tuple(-2, 3, 1, 0);
+  auto a1 = Tuple(3, -2, 5, 1);
+  auto a2 = Tuple(-2, 3, 1, 0);
   auto r = a1 + a2;
   EXPECT_EQ(r, Tuple(1, 1, 6, 1));
 }
 
 TEST_F(TupleTest, subtract_tuple){
-  Tuple a1 = Point(3., 2., 1.1);
-  Tuple a2 = Vector(5., 6., 7.1);
+  auto a1 = Point(3., 2., 1.1);
+  auto a2 = Vector(5., 6., 7.1);
   auto r = a1 - a2;
   EXPECT_EQ(r, Point(-2., -4., -6.));
 }
 
 TEST_F(TupleTest, subtract_vector_from_vector){
-  Tuple a1 = Vector(3, 2, 1);
-  Tuple a2 = Vector(5, 6, 7);
+  auto a1 = Vector(3, 2, 1);
+  auto a2 = Vector(5, 6, 7);
   auto r = a1 - a2;
   EXPECT_EQ(r, Vector(-2, -4, -6));
 }
 
 TEST_F(TupleTest, negate_tuple){
-  Tuple a1 = Tuple(1, -2, 3, -4);
+  auto a1 = Tuple(1, -2, 3, -4);
   auto r = -a1;
   EXPECT_EQ(r, Tuple(-1, 2, -3, 4));
 }
@@ -103,3 +97,15 @@ TEST_F(TupleTest, magnitude){
   EXPECT_EQ(sqrt(14), (Vector(1., 2., 3.)).magnitude());
   EXPECT_EQ(sqrt(14), (Vector(-1., -2., -3.)).magnitude());
 }
+
+// TEST_F(TupleTest, normalize){
+//   // for loop put this in vectors/ranges
+//   vector a = vector{Vector(1, 0, 0),
+//                     Vector(0, 1, 0),
+//                     Vector(0, 0, 1)};
+//   auto r = (vector{Vector(4, 0, 0), 
+//                    Vector(0, 4, 0),
+//                    Vector(0, 0, 4)}) | std::views::transform([](const auto& a) { return a.normalize(); });
+  
+//   EXPECT_EQ(Vector(1, 0, 0), r1);
+// }
