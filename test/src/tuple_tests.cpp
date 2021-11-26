@@ -1,9 +1,7 @@
 #include <vector>
-#include <ranges>
+#include <range/v3/all.hpp>
 #include <tuple.h>
 #include "gtest/gtest.h"
-
-using namespace std;
 
 class TupleTest : public ::testing::Test {
 
@@ -98,14 +96,18 @@ TEST_F(TupleTest, magnitude){
   EXPECT_EQ(sqrt(14), (Vector(-1., -2., -3.)).magnitude());
 }
 
-// TEST_F(TupleTest, normalize){
-//   // for loop put this in vectors/ranges
-//   vector a = vector{Vector(1, 0, 0),
-//                     Vector(0, 1, 0),
-//                     Vector(0, 0, 1)};
-//   auto r = (vector{Vector(4, 0, 0), 
-//                    Vector(0, 4, 0),
-//                    Vector(0, 0, 4)}) | std::views::transform([](const auto& a) { return a.normalize(); });
-  
-//   EXPECT_EQ(Vector(1, 0, 0), r1);
-// }
+TEST_F(TupleTest, normalize){
+  // for loop put this in vectors/ranges
+  auto q = std::vector{Vector(4., 0., 0.), 
+                       Vector(0., 4., 0.),
+                       Vector(0., 0., 4.),
+                       Vector(1., 2., 3.)};
+  auto a = std::vector{Vector(1., 0., 0.),
+                       Vector(0., 1., 0.),
+                       Vector(0., 0., 1.),
+                       Vector(1./sqrt(14), 2./sqrt(14), 3./sqrt(14))};
+  for (auto&& [first, second] : ranges::views::zip(q, a)) {
+     EXPECT_EQ(first.normalize(), second);
+  }
+  EXPECT_EQ(Vector(1, 2, 3).normalize().magnitude(), 1);
+}

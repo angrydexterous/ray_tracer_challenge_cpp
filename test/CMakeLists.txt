@@ -9,6 +9,6 @@ include_directories(lib/googletest/googletest/include)
 set(SOURCE_FILES main.cpp src/tuple_tests.cpp)
 
 add_executable(tuple_tests ${SOURCE_FILES})
-target_link_libraries(tuple_tests primatives gtest)
+target_link_libraries(tuple_tests primatives gtest range_v3)
 install(TARGETS tuple_tests DESTINATION bin)
 
