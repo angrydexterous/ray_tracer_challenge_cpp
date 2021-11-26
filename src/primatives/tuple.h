@@ -16,6 +16,9 @@ concept Number = (std::integral<T> || std::floating_point<T>)
                  && !std::same_as<T, char32_t>
                  && !std::same_as<T, wchar_t>;
 
+auto Point(auto x, auto y, auto z);
+auto Vector(auto x, auto y, auto z);
+
 template <typename T>
 requires Number<T>                 
 class Tuple {
@@ -49,6 +52,19 @@ class Tuple {
     Tuple<T> normalize() const{
       auto mag = this->magnitude();
       return Tuple(x_ / mag, y_ / mag, z_ / mag, w_ / mag);
+    }
+
+    T dot(Tuple<T> rhs) const{
+      return this->x() * rhs.x() +
+             this->y() * rhs.y() +
+             this->z() * rhs.z() +
+             this->w() * rhs.w();
+    }
+
+    Tuple<T> cross(Tuple<T> rhs) const{
+      return Vector(this->y() * rhs.z() - this->z() * rhs.y(),
+                    this->z() * rhs.x() - this->x() * rhs.z(),
+                    this->x() * rhs.y() - this->y() * rhs.x());
     }
 };
 
