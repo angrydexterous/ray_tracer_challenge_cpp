@@ -7,6 +7,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -O3")
 
 find_package(range-v3 CONFIG REQUIRED)
 add_library(range_v3 INTERFACE IMPORTED)
+include_directories(${RANGE_V3_INCLUDE_DIRS})
 
 set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR})
 

@@ -111,3 +111,13 @@ TEST_F(TupleTest, normalize){
   }
   EXPECT_EQ(Vector(1, 2, 3).normalize().magnitude(), 1);
 }
+
+TEST_F(TupleTest, dot_product){
+   EXPECT_EQ(20, Vector(1, 2, 3).dot(Vector(2, 3, 4)));
+}
+
+TEST_F(TupleTest, cross_product){
+  auto a = Vector(1, 2, 3);
+  auto b = Vector(2, 3, 4);
+  EXPECT_EQ(Vector(-1, 2, -1), a.cross(b));
+}
